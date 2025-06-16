@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE bomb [
+  <!ENTITY % a "A">
+  <!ENTITY % b "%a;%a;%a;%a;%a;%a;%a;%a;%a;%a;">
+  <!ENTITY % c "%b;%b;%b;%b;%b;%b;%b;%b;%b;%b;">
+]>
+<bomb>&c;</bomb>

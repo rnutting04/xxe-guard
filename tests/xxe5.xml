@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY xxe "&evil;">
+  <!ENTITY evil "bad!">
+]>
+<foo>&xxe;</foo>
