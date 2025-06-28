@@ -1,107 +1,77 @@
-XML Security Middleware 🔐
-Advanced Grammar-Aware XXE Detection and Mitigation Tool
+# XML Security Middleware
 
-This middleware acts as a language-agnostic XML sanitization layer that pre-parses uploaded XML using ANTLR and applies configurable security rules before passing input to the backend application. It is designed to detect and prevent XML External Entity (XXE) attacks and other DTD-based exploits with greater flexibility than traditional parser configurations.
+This project is a **preprocessing middleware for XML security**, designed to detect and block malicious or malformed XML before it reaches the main application parser. It focuses on detecting attacks such as XXE (XML External Entity injection), DTD abuse, and recursive entity expansion, all while offering customizable rule definitions and potential for whitelisting trusted structures.
 
-🚀 Features
-Feature	Status
-✅ Pre-parse and scan DTDs	Fully implemented
-✅ Detect parameter entities	Fully implemented
-✅ Recursive & nested ENTITY detection	Fully implemented
-⚠️ Whitelist support	Manual, automatic in progress
-⚠️ Trusted vs untrusted context	Partial support
-✅ Flexible rule logic	Customizable visitor class
-✅ Grammar-based blocking	Malicious XML rejected on parse
-⚠️ Adaptability	In progress
-⚠️ Automatic whitelist generator	In progress
-✅ Language agnostic	Yes — Python-based middleware
-✅ Open Source	MIT License
-✅ Low integration effort	Easily used as a drop-in pre-parser
+## Features
 
-Why Use This Middleware?
-While most defenses against XXE require disabling core XML features entirely, this tool selectively allows safe input and blocks only dangerous constructs. Unlike tools like defusedxml or OWASP sanitizers, this middleware:
+- Pre-parses DTDs and intercepts malicious patterns before execution
+- Detects and blocks:
+  - Parameter ENTITY declarations
+  - Recursive or nested ENTITY expansions
+  - External ENTITY references (file://, http://, etc.)
+- Identifies DTD overloads (Billion Laughs-style DoS)
+- Flags unsafe use of `ANY` content model
+- Supports customizable rules and alert logic
+- Partial context-awareness via trust flags
+- Designed to be language-agnostic and embeddable in multiple environments
+- Future support planned for:
+  - Auto-generated whitelists based on observed safe XML patterns
+  - More fine-grained trust management
 
-Gives visibility into malicious structure (ENTITY, %, recursion, etc.)
+## Comparison With Existing Tools
 
-Supports custom policies for specific applications
+| Feature                              | Your Middleware | Java Config | defusedxml | OWASP XML Sanitizer | ModSecurity WAF | Go (encoding/xml) |
+|-------------------------------------|------------------|-------------|-------------|----------------------|------------------|--------------------|
+| Pre-parse DTDs                      | Yes              | No          | No          | Partial              | No               | No (blocks entirely) |
+| Parameter ENTITY Detection          | Yes              | No          | Yes         | Partial              | Yes              | No (blocks entirely) |
+| Recursive ENTITY Detection          | Yes              | No          | Yes         | Yes                  | Partial          | No (blocks entirely) |
+| Whitelist Support                   | Manual only      | No          | No          | Yes                  | No               | No                 |
+| Context Awareness (trusted source)  | Partial          | No          | No          | No                   | No               | No                 |
+| Flexible Custom Rules               | Yes              | No          | No          | Yes                  | Partial          | No                 |
+| Blocks on Grammar Parse             | Yes              | No          | No          | Partial              | Yes              | Yes                |
+| Adaptability                        | In progress      | No          | No          | Partial              | Partial          | No                 |
+| Automatic Whitelist                 | In progress      | No          | No          | No                   | No               | No                 |
+| Language Agnostic                   | Yes              | No (Java)   | No (Python) | Partial              | Yes              | Yes (Go)           |
+| Open Source                         | Yes              | Yes         | Yes         | Yes                  | Yes              | Yes                |
+| Integration Effort                  | Low              | Low         | Low         | Medium               | High             | Low                |
 
-Is fully grammar-aware and not bound to a single platform or parser
+## Installation
 
-Allows preprocessing XML before your backend sees it
-
-🔍 How It Works
-Uses an ANTLR4 grammar for XML + DTDs
-
-Walks the parse tree with a custom SecurityScanVisitor
-
-Flags dangerous patterns:
-
-External entities
-
-Parameter entities (<!ENTITY % ...>)
-
-Recursive expansions
-
-Oversized DTDs
-
-Unsafe content models like ANY
-
-Logs or blocks malicious inputs before parsing by any XML processor
-
-🧪 Example Detection Output
-```
-[i] DOCTYPE present  
-[!] Parameter ENTITY declared: a  
-[!] External ENTITY: xxe → file:///etc/passwd  
-[!] Too many ENTITY declarations: 123 (Possible DTD overload)  
-```
-📦 Installation
-Clone and install dependencies:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourname/xml-security-middleware.git
+   cd xml-security-middleware
 
 ```
-git clone https://github.com/yourusername/xml-security-middleware.git
-cd xml-security-middleware
+2. (Optional) Create and activate a virtual environment:
+```python
+python -m venv venv
+source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+```
+
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
 ```
-🧩 Integration
-This is designed to be integrated before the main XML parser:
 
-```
+## Usage
+The middleware is built as a visitor over a custom ANTLR XML parser. To use it:
+```python
 from middleware.SecurityScanVisitor import SecurityScanVisitor
-from antlr4 import InputStream, CommonTokenStream
-from XMLLexer import XMLLexer
-from XMLParser import XMLParser
+visitor = SecurityScanVisitor()
+tree = parser.document()  # Assuming `parser` is from ANTLR's XMLParser
+visitor.visit(tree)
 
-def scan(xml_string):
-    stream = InputStream(xml_string)
-    lexer = XMLLexer(stream)
-    tokens = CommonTokenStream(lexer)
-    parser = XMLParser(tokens)
-    tree = parser.document()
-
-    visitor = SecurityScanVisitor()
-    visitor.visit(tree)
-    return visitor.alerts
+for alert in visitor.alerts:
+    print(alert)
 ```
-🧠 Comparison
-Feature	This Middleware	defusedxml	OWASP Sanitizer	Java Config
-Pre-parses DTDs	✅	✖	➖	✖
-Parameter ENTITY detection	✅	✅	➖	✖
-Recursive ENTITY detection	✅	✅	✅	✖
-Custom rule logic	✅	✖	✅	✖
-Language-agnostic	✅	✖ (Python)	➖	✖ (Java)
 
-🏗 Roadmap
- Fully trusted/untrusted context tracking
+## Roadmap
 
- Automatic whitelist generator from safe corpus
+-Context-aware whitelist automation
 
- Configurable rule profile system
+-Graph-based recursive expansion depth tracking
 
- JSON output mode
+-Configurable policy engine for enterprises
 
- Grammar enhancements (CDATA/XInclude)
-
-📄 License
-MIT License
-
+-Plugin support for Go, Java, and Node.js bridges
