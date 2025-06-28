@@ -19,7 +19,7 @@ This project is a **preprocessing middleware for XML security**, designed to det
   - More fine-grained trust management
 
 ## Example Detection Output
-    ``` less
+    ```less
     [i] DOCTYPE present  
     [!] Parameter ENTITY declared: a  
     [!] External ENTITY: xxe → file:///etc/passwd  
