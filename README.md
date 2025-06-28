@@ -18,6 +18,14 @@ This project is a **preprocessing middleware for XML security**, designed to det
   - Auto-generated whitelists based on observed safe XML patterns
   - More fine-grained trust management
 
+## Example Detection Output
+    ``` less
+    [i] DOCTYPE present  
+    [!] Parameter ENTITY declared: a  
+    [!] External ENTITY: xxe → file:///etc/passwd  
+    [!] Too many ENTITY declarations: 123 (Possible DTD overload) 
+    ```
+
 ## Comparison With Existing Tools
 
 | Feature                              | Your Middleware | Java Config | defusedxml | OWASP XML Sanitizer | ModSecurity WAF | Go (encoding/xml) |
@@ -65,6 +73,7 @@ visitor.visit(tree)
 for alert in visitor.alerts:
     print(alert)
 ```
+
 
 ## Roadmap
 
