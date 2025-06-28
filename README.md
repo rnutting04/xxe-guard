@@ -42,17 +42,17 @@ This project is a **preprocessing middleware for XML security**, designed to det
    git clone https://github.com/yourname/xml-security-middleware.git
    cd xml-security-middleware
 
-```
+    ```
 2. (Optional) Create and activate a virtual environment:
-```python
-python -m venv venv
-source venv/bin/activate  # or .\venv\Scripts\activate on Windows
-```
+    ```python
+    python -m venv venv
+    source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+    ```
 
 3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 The middleware is built as a visitor over a custom ANTLR XML parser. To use it:
