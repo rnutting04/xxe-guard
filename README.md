@@ -44,7 +44,7 @@ This project is a **preprocessing middleware for XML security**, designed to det
 
     ```
 2. (Optional) Create and activate a virtual environment:
-    ```python
+    ```bash
     python -m venv venv
     source venv/bin/activate  # or .\venv\Scripts\activate on Windows
     ```
@@ -68,10 +68,10 @@ for alert in visitor.alerts:
 
 ## Roadmap
 
--Context-aware whitelist automation
+- Context-aware whitelist automation
 
--Graph-based recursive expansion depth tracking
+- Graph-based recursive expansion depth tracking
 
--Configurable policy engine for enterprises
+- Configurable policy engine for enterprises
 
--Plugin support for Go, Java, and Node.js bridges
+- Plugin support for Go, Java, and Node.js bridges
