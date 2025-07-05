@@ -1,0 +1,12 @@
+{
+  "allowed_tags": [
+    "author",
+    "book",
+    "catalog",
+    "title"
+  ],
+  "allowed_attributes": [
+    "id"
+  ],
+  "allowed_entities": []
+}

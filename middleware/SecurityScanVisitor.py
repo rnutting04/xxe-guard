@@ -1,6 +1,5 @@
-from middleware.XMLParserVisitor import XMLParserVisitor
 import re 
-
+from XMLParserVisitor import XMLParserVisitor
 
 MAX_ENTITY_COUNT = 100
 
@@ -36,7 +35,7 @@ class SecurityScanVisitor(XMLParserVisitor):
 
         return self.visitChildren(ctx)
 
-    def visitElementdecl(self, ctx):
+    def visitElementdecl(self, ctx): 
         element_name = ctx.DTDName().getText()
         if "ANY" in ctx.getText():
             self.alerts.append(f"[!] ELEMENT {element_name} uses ANY content model (loose structure)")

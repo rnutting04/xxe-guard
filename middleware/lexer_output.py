@@ -1,4 +1,4 @@
-from antlr4 import *
+from antlr4 import InputStream 
 from XMLLexer import XMLLexer
 
 data = """<?xml version="1.0"?>
