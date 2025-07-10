@@ -3,10 +3,22 @@
     "author",
     "book",
     "catalog",
+    "logo",
+    "publisher",
     "title"
   ],
   "allowed_attributes": [
+    "genre",
     "id"
   ],
-  "allowed_entities": []
+  "allowed_entities": {
+    "id": "bk102",
+    "genre": "Computer",
+    "author": "Gambardella, Matthew",
+    "title": "XML Developer's Guide",
+    "publisher": "Solar Gators Publishing",
+    "logo": "https://example.com/logo.svg",
+    "author2": "Doe, Jane",
+    "title2": "Advanced XML Techniques"
+  }
 }

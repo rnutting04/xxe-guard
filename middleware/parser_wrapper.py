@@ -1,7 +1,7 @@
 from antlr4 import InputStream, CommonTokenStream
-from SecurityScanVisitor import SecurityScanVisitor
-from XMLLexer import XMLLexer
-from XMLParser import XMLParser
+from middleware.XMLLexer import XMLLexer
+from middleware.XMLParser import XMLParser
+from middleware.SecurityScanVisitor import SecurityScanVisitor
 
 
 def run_xxe_check(xml_data: str) -> bool:
