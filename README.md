@@ -26,7 +26,7 @@ XXE Guard is a language-agnostic XML security middleware that detects and blocks
   If malformed XML causes the primary parser to fail, a regex scanner runs as a fallback.
 
 - **Dockerized API**  
-  Runs as a Flask API inside Docker and accepts XML payloads via `/upload`.
+  Runs as a Flask API inside Docker and accepts XML payloads via `/scan-xml`.
 
 ## Current API Endpoints
 
