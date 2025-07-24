@@ -1,22 +1,40 @@
-# XML Security Middleware
 
-This project is a **preprocessing middleware for XML security**, designed to detect and block malicious or malformed XML before it reaches the main application parser. It focuses on detecting attacks such as XXE (XML External Entity injection), DTD abuse, and recursive entity expansion, all while offering customizable rule definitions and potential for whitelisting trusted structures.
+# XXE Guard
+
+XXE Guard is a language-agnostic XML security middleware that detects and blocks XML External Entity (XXE) attacks using both grammar-based parsing and customizable whitelisting. It is designed to be containerized and easily integrated into existing pipelines or APIs.
 
 ## Features
 
-- Pre-parses DTDs and intercepts malicious patterns before execution
-- Detects and blocks:
-  - Parameter ENTITY declarations
-  - Recursive or nested ENTITY expansions
-  - External ENTITY references (file://, http://, etc.)
-- Identifies DTD overloads (Billion Laughs-style DoS)
-- Flags unsafe use of `ANY` content model
-- Supports customizable rules and alert logic
-- Partial context-awareness via trust flags
-- Designed to be language-agnostic and embeddable in multiple environments
-- Future support planned for:
-  - Auto-generated whitelists based on observed safe XML patterns
-  - More fine-grained trust management
+- **ANTLR-based XML parsing**  
+  Parses XML with a custom grammar that supports DTDs, internal subsets, parameter entities, and more.
+
+- **SecurityScanVisitor**  
+  Walks the parsed XML and flags:
+  - External entities (e.g., `file://`, `http://`, `php://`)
+  - Recursive or parameter entities
+  - Excessive entity declarations (DoS)
+  - Use of `ANY` in element declarations
+  - Use of external DTDs
+
+- **Static Whitelisting Support**  
+  Supports auto-generated JSON whitelists from source code, identifying:
+  - Allowed tags
+  - Allowed attributes
+  - Allowed entity name-value pairs
+
+- **Regex-based Fallback Scanner**  
+  If malformed XML causes the primary parser to fail, a regex scanner runs as a fallback.
+
+- **Dockerized API**  
+  Runs as a Flask API inside Docker and accepts XML payloads via `/upload`.
+
+## Current API Endpoints
+
+- `GET /`  
+  HTML form for manual XML upload.
+
+- `POST /scan-xml`  
+  Accepts XML payload (raw or via form). Returns alerts or blocks based on findings.
 
 ## Example Detection Output
 
@@ -45,37 +63,42 @@ This project is a **preprocessing middleware for XML security**, designed to det
 | Open Source                         | Yes              | Yes         | Yes         | Yes                  | Yes              | Yes                |
 | Integration Effort                  | Low              | Low         | Low         | Medium               | High             | Low                |
 
+## Directory Structure
+```bash
+xxe-guard/
+├── api/
+│   └── app.py                  # Flask entry point
+├── middleware/
+│   ├── parser_wrapper.py       # Secure parsing logic
+│   ├── SecurityScanVisitor.py  # Custom visitor
+│   ├── XMLLexer.g4             # ANTLR lexer grammar
+│   └── XMLParser.g4            # ANTLR parser grammar
+├── tools/
+│   └── whitelist_generators/   # Source code scanners (e.g., for Python)
+├── whitelists/
+│   └── python_whitelist.json   # Auto-generated whitelist
+├── requirements.txt
+├── Dockerfile
+└── docker-compose.yml
+```
+
 ## Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourname/xml-security-middleware.git
-   cd xml-security-middleware
+   git clone https://github.com/yourname/xml-guard.git
+   cd xml-guard
 
     ```
-2. (Optional) Create and activate a virtual environment:
+2. Optioanlly, run the whitelist generator:
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+    python tools/whitelist_generators/python_analyzer.py <path_to_source_code>
     ```
 
-3. Install dependencies:
+3. Build and run the Docker container:
     ```bash
-    pip install -r requirements.txt
+    docker-compose up --build
     ```
-
-## Usage
-The middleware is built as a visitor over a custom ANTLR XML parser. To use it:
-```python
-from middleware.SecurityScanVisitor import SecurityScanVisitor
-visitor = SecurityScanVisitor()
-tree = parser.document()  # Assuming `parser` is from ANTLR's XMLParser
-visitor.visit(tree)
-
-for alert in visitor.alerts:
-    print(alert)
-```
-
 
 ## Roadmap
 
@@ -85,4 +108,3 @@ for alert in visitor.alerts:
 
 - Configurable policy engine for enterprises
 
-- Plugin support for Go, Java, and Node.js bridges

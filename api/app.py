@@ -11,7 +11,7 @@ MAX_VIOLATIONS = 3
 
 app = Flask(__name__)
 
-@app.route("/upload", methods=["POST"])
+@app.route("/scan-xml", methods=['POST'])
 def upload():
     xml_data = request.data.decode()
     alerts = secure_parse(xml_data)
@@ -29,11 +29,11 @@ def blocked():
 @app.route('/')
 def index():
     return '''
-        <h2>Upload XML</h2>
-        <form method="POST" action="/upload">
-            <textarea name="xml" rows="10" cols="50"></textarea><br>
-            <input type="submit" value="Submit">
-        </form>
+    <h2>Paste XML here</h2>
+    <form action="/scan-xml" method="post" enctype="multipart/form-data">
+        <textarea name="xml" rows="20" cols="80"></textarea>
+        <input type="submit" value="Scan">
+    </form>
     '''
 
 
