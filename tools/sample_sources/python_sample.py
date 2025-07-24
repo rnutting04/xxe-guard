@@ -22,7 +22,7 @@ def generate_xml():
     title.text = "XML Developer's Guide"
 
     publisher = ET.SubElement(book, 'publisher')
-    publisher.text = "Solar Gators Publishing"
+    publisher.text = "C&S Computer Press"
 
     logo = ET.SubElement(book, 'logo')
     logo.text = "https://example.com/logo.svg"

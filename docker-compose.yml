@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  xxe-guard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./whitelists:/app/whitelists:ro   # Mount whitelist directory (read-only)
+      - ./tools:/app/tools                # Optional: mount static analyzers
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app

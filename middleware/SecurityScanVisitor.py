@@ -37,6 +37,7 @@ class SecurityScanVisitor(XMLParserVisitor):
         if ctx.PERCENT():
             self.alerts.append(f"[!] Parameter ENTITY declared: {name}")
         elif name in self.allowed_entities and self.allowed_entities[name] == value:
+            print(f"[i] Whitelisted ENTITY: {name}")
             self.alerts.append(f"[i] Whitelisted ENTITY: {name}")
         elif re.match(r'(?i)^(file|http|https|ftp|php|jar|gopher|data|expect)://', value):
             self.alerts.append(f"[!] External ENTITY: {name} → {value}")
