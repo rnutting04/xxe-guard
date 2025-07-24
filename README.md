@@ -31,7 +31,7 @@ XXE Guard is a language-agnostic XML security middleware that detects and blocks
 ## Current API Endpoints
 
 - `GET /`  
-  HTML form for manual XML upload.
+  HTML form for manual XML payload submission.
 
 - `POST /scan-xml`  
   Accepts XML payload (raw or via form). Returns alerts or blocks based on findings.
